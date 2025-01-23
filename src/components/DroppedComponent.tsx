@@ -1,40 +1,43 @@
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import { useComponentsStore } from '@/store/components';
+import { Card } from '@/components/ui/card';
+import type { Position } from '@/core/types';
 
 interface DroppedComponentProps {
   id: string;
-  type: string;
-  position: { x: number; y: number };
+  position: Position;
+  onRemove: () => void;
+  children: React.ReactNode;
 }
 
-export function DroppedComponent({ id, type, position }: DroppedComponentProps) {
-  const removeComponent = useComponentsStore(state => state.removeComponent);
-
+export function DroppedComponent({ 
+  id, 
+  position, 
+  onRemove,
+  children 
+}: DroppedComponentProps) {
   return (
     <div
+      data-component-id={id}
       style={{
         position: 'absolute',
         left: position.x,
         top: position.y,
         transform: 'translate(-50%, -50%)',
       }}
+      className="group"
     >
-      <Card className="w-[200px]">
-        <CardHeader className="flex flex-row items-center justify-between py-3">
-          <CardTitle className="text-sm font-medium">
-            {type}
-          </CardTitle>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6"
-            onClick={() => removeComponent(id)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </CardHeader>
+      <Card className="w-[200px] relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={onRemove}
+          aria-label="Remove component"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+        {children}
       </Card>
     </div>
   );

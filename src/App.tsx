@@ -2,8 +2,18 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import FlowPage from './pages/flow';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { defaultComponents } from '@/components/flow/registry';
+import { useRegistry } from '@/core/registry';
+import { useEffect } from 'react';
 
 function App() {
+  const registerMany = useRegistry(state => state.registerMany);
+
+  // Регистрируем компоненты при монтировании приложения
+  useEffect(() => {
+    registerMany(defaultComponents);
+  }, [registerMany]);
+
   return (
     <Router>
       <Routes>
@@ -11,7 +21,7 @@ function App() {
           <div className="flex flex-col items-center justify-center h-screen">
             <h1 className="text-2xl font-bold">Welcome to UI Builder</h1>
             <div className="mt-4">
-              <Button variant="outline">
+              <Button asChild variant="outline">
                 <Link to="/flow">
                   Let's start
                 </Link>

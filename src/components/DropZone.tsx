@@ -1,58 +1,41 @@
-import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { useComponentsStore } from "@/store/components";
-import { DroppedComponent as DroppedComponentView } from "@/components/DroppedComponent";
+import { Canvas } from "@/core/Canvas";
+import { useWorkspace } from "@/core/hooks/useWorkspace";
+import { useRegistry } from "@/core/registry";
+import type { Position } from "@/core/types";
+import { DroppedComponent } from "./DroppedComponent";
 
 export function DropZone() {
-  const [isDragOver, setIsDragOver] = useState(false);
-  const { components, addComponent } = useComponentsStore();
+  const { nodes, addNode, removeNode } = useWorkspace();
+  const { getComponent } = useRegistry();
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-
-    const type = e.dataTransfer.getData('componentType');
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    addComponent(type, { x, y });
+  const handleDrop = (type: string, position: Position) => {
+    const componentDef = getComponent(type);
+    if (componentDef) {
+      addNode(type, position, componentDef.defaultData);
+    }
   };
 
   return (
-    <div 
-      className={cn(
-        "w-full h-full min-h-[300px]",
-        "border-2 border-dashed rounded-lg",
-        "transition-colors duration-200",
-        "p-4 sm:p-6 lg:p-8",
-        "relative", // Добавляем для абсолютного позиционирования компонентов
-        isDragOver ? "border-primary/50 bg-primary/5" : "border-muted",
-        "h-[calc(100vh-32px)] sm:h-[calc(100vh-48px)] lg:h-[calc(100vh-64px)]"
-      )}
-      onDragOver={(e) => {
-        e.preventDefault();
-        setIsDragOver(true);
-      }}
-      onDragLeave={() => setIsDragOver(false)}
+    <Canvas 
       onDrop={handleDrop}
+      className="h-[calc(100vh-32px)] sm:h-[calc(100vh-48px)] lg:h-[calc(100vh-64px)] min-h-[300px]"
     >
-      {components.map((component) => (
-        <DroppedComponentView
-          key={component.id}
-          {...component}
-        />
-      ))}
-      
-      {!isDragOver && components.length === 0 && (
-        <div className="h-full flex items-center justify-center text-muted-foreground">
-          <p className="text-center">
-            Перетащите компоненты сюда
-            <br />
-            <span className="text-sm">Drag and drop components here</span>
-          </p>
-        </div>
-      )}
-    </div>
+      {nodes.map((node) => {
+        const componentDef = getComponent(node.type);
+        if (!componentDef) return null;
+
+        const Component = componentDef.component;
+        return (
+          <DroppedComponent
+            key={node.id}
+            id={node.id}
+            position={node.position}
+            onRemove={() => removeNode(node.id)}
+          >
+            <Component data={node.data} />
+          </DroppedComponent>
+        );
+      })}
+    </Canvas>
   );
 } 

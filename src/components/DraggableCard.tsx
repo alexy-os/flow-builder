@@ -1,14 +1,17 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { GripVertical } from "lucide-react";
+import type { ComponentDefinition } from "@/core/types";
+import { LucideIcon } from "lucide-react";
 
 interface DraggableCardProps {
-  title: string;
-  type: string;
+  component: ComponentDefinition & {
+    icon?: LucideIcon;
+  };
 }
 
-export function DraggableCard({ title, type }: DraggableCardProps) {
+export function DraggableCard({ component }: DraggableCardProps) {
   const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData('componentType', type);
+    e.dataTransfer.setData('componentType', component.type);
     // Добавляем эффект перемещения
     e.dataTransfer.effectAllowed = 'move';
   };
@@ -20,8 +23,20 @@ export function DraggableCard({ title, type }: DraggableCardProps) {
       className="cursor-move hover:border-primary/50 transition-colors"
     >
       <CardHeader className="flex flex-row items-center gap-2 py-3">
-        <GripVertical className="h-5 w-5 text-muted-foreground" />
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        {component.icon ? (
+          <component.icon 
+            className="h-5 w-5 text-muted-foreground"
+            aria-hidden="true"
+          />
+        ) : (
+          <GripVertical 
+            className="h-5 w-5 text-muted-foreground"
+            aria-hidden="true"
+          />
+        )}
+        <CardTitle className="text-sm font-medium">
+          {component.title}
+        </CardTitle>
       </CardHeader>
     </Card>
   );
