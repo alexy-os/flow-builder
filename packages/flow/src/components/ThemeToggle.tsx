@@ -1,16 +1,16 @@
 import { Moon, Sun } from "lucide-react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Button } from "@packages/flow/components/ui/button";
+import { Button } from "@packages/ui/components/ui/button";
 import { useEffect } from "react";
 
-// Определяем тип состояния
+// Define the type of state
 interface ThemeState {
   isDark: boolean;
   toggle: () => void;
 }
 
-// Создаем store с персистентностью
+// Create store with persistence
 const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
@@ -18,7 +18,7 @@ const useThemeStore = create<ThemeState>()(
       toggle: () => set((state) => ({ isDark: !state.isDark })),
     }),
     {
-      name: 'theme-storage', // имя в localStorage
+      name: 'theme-storage', // name in localStorage
     }
   )
 );
@@ -26,7 +26,7 @@ const useThemeStore = create<ThemeState>()(
 export function ThemeToggle() {
   const { isDark, toggle } = useThemeStore();
 
-  // Эффект для синхронизации с DOM
+  // Effect for synchronizing with DOM
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.toggle('dark', isDark);

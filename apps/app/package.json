@@ -9,7 +9,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "clean": "rm -rf node_modules"
+    "clean": "rm -rf ./node_modules ./**/node_modules bun.lockb"
   },
   "dependencies": {
     "@packages/ui": "workspace:*",

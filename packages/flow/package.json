@@ -19,5 +19,14 @@
     },
     "./components/*": "./src/components/*",
     "./core/*": "./src/core/*"
+  },
+  "dependencies": {
+    "@packages/ui": "workspace:*",
+    "zustand": "^4.5.0",
+    "lucide-react": "^0.300.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

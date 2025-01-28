@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 
-// Базовые типы для всей системы
+// Base types for the entire system
 export interface Position {
   x: number;
   y: number;
@@ -34,7 +34,7 @@ export interface BasePort {
   data?: Record<string, unknown>;
 }
 
-// Типы для регистрации компонентов
+// Types for component registration
 export interface ComponentDefinition {
   type: string;
   category: string;

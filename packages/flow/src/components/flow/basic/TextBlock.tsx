@@ -1,4 +1,4 @@
-import { CardContent } from "@packages/flow/components/ui/card";
+import { CardContent } from "@packages/ui/components/ui/card";
 import { Type } from "lucide-react";
 
 interface TextBlockProps {
@@ -15,7 +15,6 @@ export function TextBlock({ data }: TextBlockProps) {
   );
 }
 
-// Экспортируем определение компонента
 export const textBlockDefinition = {
   type: 'text-block',
   category: 'basic',

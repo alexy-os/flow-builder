@@ -18,6 +18,6 @@
     "dev": "bun run --cwd apps/app dev",
     "build": "bun run --cwd apps/app build",
     "preview": "bun run --cwd apps/app preview",
-    "clean": "rm -rf node_modules **/*/node_modules"
+    "clean": "rm -rf node_modules **/*/node_modules && rm -rf bun.lockb"
   }
 }

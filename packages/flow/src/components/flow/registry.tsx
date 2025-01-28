@@ -1,7 +1,7 @@
 import { LayoutIcon } from "lucide-react";
 import type { ComponentDefinition } from "@packages/flow/core/types";
 
-// Определение компонента секции
+// Define the section component
 const sectionDefinition: ComponentDefinition = {
   type: 'section',
   category: 'basic',
@@ -15,8 +15,8 @@ const sectionDefinition: ComponentDefinition = {
   ),
 };
 
-// Экспортируем массив компонентов
+// Export an array of components
 export const defaultComponents: ComponentDefinition[] = [
   sectionDefinition,
-  // здесь можно добавить другие компоненты
+  // You can add other components here
 ]; 

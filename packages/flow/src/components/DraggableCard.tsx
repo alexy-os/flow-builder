@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle } from "@packages/flow/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@packages/ui/components/ui/card";
 import { GripVertical } from "lucide-react";
 import type { ComponentDefinition } from "@packages/flow/core/types";
 import type { LucideIcon } from "lucide-react";
@@ -12,7 +12,6 @@ interface DraggableCardProps {
 export function DraggableCard({ component }: DraggableCardProps) {
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('componentType', component.type);
-    // Добавляем эффект перемещения
     e.dataTransfer.effectAllowed = 'move';
   };
 

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import FlowPage from './pages/flow';
 import { Button } from '@packages/ui/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -9,7 +9,6 @@ import { useEffect } from 'react';
 function App() {
   const registerMany = useRegistry(state => state.registerMany);
 
-  // Регистрируем компоненты при монтировании приложения
   useEffect(() => {
     registerMany(defaultComponents);
   }, [registerMany]);

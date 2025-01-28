@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
-import { Button } from '@packages/flow/components/ui/button';
-import { Card } from '@packages/flow/components/ui/card';
+import { Button } from '@packages/ui/components/ui/button';
+import { Card } from '@packages/ui/components/ui/card';
 import type { Position } from '@packages/flow/core/types';
 
 interface DroppedComponentProps {
