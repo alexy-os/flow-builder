@@ -1,0 +1,10 @@
+{
+  "extends": "@packages/typescript-config/vite.json",
+  "include": ["src", "../../packages/flow/core/lib"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@packages/flow/*": ["../../packages/flow/src/*"]
+    }
+  }
+} 
