@@ -3,16 +3,8 @@ import SortPage from './pages/dnd-sort';
 import KanbanPage from './pages/dnd-kanban';
 import { Button } from '@packages/ui/components/ui/button';
 import { Link } from 'react-router-dom';
-import { defaultComponents } from '@packages/flow/components/flow/registry';
-import { useRegistry } from '@packages/flow/core/registry';
-import { useEffect } from 'react';
 
 function App() {
-  const registerMany = useRegistry(state => state.registerMany);
-
-  useEffect(() => {
-    registerMany(defaultComponents);
-  }, [registerMany]);
 
   return (
     <Router>

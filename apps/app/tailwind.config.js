@@ -5,7 +5,6 @@ export default {
   content: [
     "./src/**/*.{ts,tsx}",
     "../../packages/ui/src/**/*.{ts,tsx}",
-    "../../packages/flow/src/**/*.{ts,tsx}",
   ],
   presets: [uiPreset]
 } 
