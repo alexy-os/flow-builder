@@ -1,7 +1,7 @@
 {
   "name": "flow-builder",
   "description": "BunJs + Vite as a Workspace for Flow Builder",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "license": "MIT",
   "author": "AlexY-OS",
@@ -19,5 +19,8 @@
     "build": "bun run --cwd apps/app build",
     "preview": "bun run --cwd apps/app preview",
     "clean": "rm -rf node_modules **/*/node_modules && rm -rf bun.lockb"
+  },
+  "dependencies": {
+    "leader-line-new": "^1.1.9"
   }
 }
