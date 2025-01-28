@@ -1,23 +1,23 @@
-import { CardContent } from "@packages/ui/components/ui/card";
 import { Type } from "lucide-react";
+import { BaseBlock, createBlockDefinition } from "./BaseBlock";
+import type { BaseBlockProps } from "./BaseBlock";
 
-interface TextBlockProps {
+interface TextBlockProps extends BaseBlockProps {
   data?: {
     text?: string;
   };
 }
 
-export function TextBlock({ data }: TextBlockProps) {
+export function TextBlock({ data, ...props }: TextBlockProps) {
   return (
-    <CardContent>
-      <p className="text-sm">{data?.text || 'Text Block'}</p>
-    </CardContent>
+    <BaseBlock {...props}>
+      {data?.text || 'Drop text here'}
+    </BaseBlock>
   );
 }
 
-export const textBlockDefinition = {
+export const textBlockDefinition = createBlockDefinition({
   type: 'text-block',
-  category: 'basic',
   title: 'Text Block',
   description: 'Simple text block component',
   icon: Type,
@@ -25,4 +25,4 @@ export const textBlockDefinition = {
   defaultData: {
     text: 'Edit this text'
   }
-}; 
+}); 

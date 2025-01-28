@@ -9,6 +9,7 @@ interface WorkspaceState {
   removeNode: (id: string) => void;
   addEdge: (edge: BaseEdge) => void;
   removeEdge: (id: string) => void;
+  updateNodePosition: (id: string, position: Position) => void;
 }
 
 export const useWorkspace = create<WorkspaceState>((set) => ({
@@ -43,5 +44,11 @@ export const useWorkspace = create<WorkspaceState>((set) => ({
 
   removeEdge: (id) => set((state) => ({
     edges: state.edges.filter(edge => edge.id !== id)
-  }))
+  })),
+
+  updateNodePosition: (id, position) => set((state) => ({
+    nodes: state.nodes.map(node =>
+      node.id === id ? { ...node, position } : node
+    )
+  })),
 })); 

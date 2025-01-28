@@ -15,20 +15,22 @@ export function Canvas({ children, onDrop, className }: CanvasProps) {
     e.preventDefault();
     setIsDragOver(false);
 
-    const type = e.dataTransfer.getData('componentType');
     const rect = e.currentTarget.getBoundingClientRect();
-    const position = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    };
-
-    onDrop?.(type, position);
+    const type = e.dataTransfer.getData('componentType');
+    
+    if (type) {
+      const position = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+      onDrop?.(type, position);
+    }
   }, [onDrop]);
 
   return (
     <div 
       className={cn(
-        "w-full h-full relative",
+        "w-full h-full relative overflow-auto",
         "border-2 border-dashed rounded-lg",
         isDragOver ? "border-primary/50 bg-primary/5" : "border-muted",
         className
