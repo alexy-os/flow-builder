@@ -12,6 +12,7 @@ interface SortableListProps {
   contentClassName?: string;
   renderItem?: (item: List['items'][0]) => React.ReactNode;
   renderHeader?: () => React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export function SortableList({
@@ -21,7 +22,8 @@ export function SortableList({
   headerClassName = '',
   contentClassName = '',
   renderItem,
-  renderHeader
+  renderHeader,
+  children
 }: SortableListProps) {
   const {
     attributes,
@@ -62,7 +64,9 @@ export function SortableList({
         <SortableContext items={list.items.map(item => item.id)}>
           {list.items.map((item) => (
             renderItem ? (
-              renderItem(item)
+              <div key={item.id} className="relative z-[5]">
+                {renderItem(item)}
+              </div>
             ) : (
               <SortableItem
                 key={item.id}
@@ -73,6 +77,7 @@ export function SortableList({
             )
           ))}
         </SortableContext>
+        {children}
       </div>
     </div>
   );

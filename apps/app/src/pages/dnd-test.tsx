@@ -21,7 +21,7 @@ const SIDEBAR_COMPONENTS: DraggableComponent[] = [
 
 function Sidebar() {
   return (
-    <div className="w-64 bg-gray-100 p-4 space-y-4 rounded-lg">
+    <div className="w-64 bg-gray-100 p-4 space-y-4 rounded-lg relative z-10">
       <h2 className="font-semibold text-lg">Components</h2>
       {SIDEBAR_COMPONENTS.map(component => (
         <DraggableItem
@@ -37,7 +37,7 @@ function Sidebar() {
 
 function DragOverlayContent({ item }: { item: CanvasItem }) {
   return (
-    <div className={`${item.color} p-4 rounded text-white text-center mb-2 shadow-lg cursor-grabbing`}>
+    <div className={`${item.color} p-4 rounded text-white text-center mb-2 shadow-lg cursor-grabbing z-[100]`}>
       {item.label}
     </div>
   );
@@ -45,7 +45,7 @@ function DragOverlayContent({ item }: { item: CanvasItem }) {
 
 function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) {
   return (
-    <div className="flex-1 overflow-hidden">
+    <div className="flex-1">
       <div className="mb-4">
         <Button onClick={onAddList} variant="outline" size="sm">
           <Plus className="w-4 h-4 mr-2" />
@@ -53,35 +53,43 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
         </Button>
       </div>
       <div 
-        className="flex gap-4 overflow-x-auto p-4 min-h-[600px] scrollbar-thin scrollbar-thumb-gray-300 horizontal-scroll"
-        style={{
-          width: 'calc(100vw - 350px)',
-          overflowX: 'auto',
-          overflowY: 'hidden'
-        }}
+        className="w-[calc(100vw-350px)] h-[calc(100vh-180px)] border rounded-md overflow-auto
+          scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100
+          hover:scrollbar-thumb-gray-400 
+          dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800
+          dark:hover:scrollbar-thumb-gray-500"
+        data-scrollable
       >
-        {lists.map((list) => (
-          <SortableList
-            key={list.id}
-            list={list}
-            className="w-80 flex-shrink-0"
-            headerClassName="bg-gray-100 p-2 rounded-t cursor-move"
-            contentClassName="bg-gray-50 p-2 rounded-b min-h-[200px]"
-            itemClassName="mb-2"
-            renderItem={(item) => (
-              <SortableItem
-                key={item.id}
-                item={item}
-                listId={list.id}
-                className={`${item.color} p-4 rounded text-white text-center touch-none`}
-              >
-                <div className="cursor-grab active:cursor-grabbing">
-                  {item.label}
+        <div className="flex space-x-4 p-4 w-max min-h-full">
+          {lists.map((list) => (
+            <SortableList
+              key={list.id}
+              list={list}
+              className="w-80 flex-shrink-0"
+              headerClassName="bg-gray-100 p-2 rounded-t cursor-move"
+              contentClassName="bg-gray-50 p-2 rounded-b space-y-3"
+              itemClassName="mb-2"
+              renderItem={(item) => (
+                <div className="relative z-[5]">
+                  <SortableItem
+                    key={item.id}
+                    item={item}
+                    listId={list.id}
+                    className={`${item.color} p-4 rounded text-white text-center touch-none`}
+                  >
+                    <div className="cursor-grab active:cursor-grabbing">
+                      {item.label}
+                    </div>
+                  </SortableItem>
                 </div>
-              </SortableItem>
-            )}
-          />
-        ))}
+              )}
+            >
+              <div className="h-20 rounded border-2 border-dashed border-gray-200 mt-3 flex items-center justify-center text-gray-400">
+                Drop here
+              </div>
+            </SortableList>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -207,30 +215,3 @@ export default function DndTest() {
     </div>
   );
 }
-
-// Стили для скролла
-const styles = `
-  .horizontal-scroll::-webkit-scrollbar {
-    height: 8px;
-  }
-  
-  .horizontal-scroll::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-  
-  .horizontal-scroll::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-  }
-  
-  .horizontal-scroll::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-`;
-
-if (typeof document !== 'undefined') {
-  const styleSheet = document.createElement('style');
-  styleSheet.textContent = styles;
-  document.head.appendChild(styleSheet);
-} 

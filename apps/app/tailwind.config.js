@@ -6,5 +6,11 @@ export default {
     "./src/**/*.{ts,tsx}",
     "../../packages/ui/src/**/*.{ts,tsx}",
   ],
+  theme: {
+    extend: {},
+  },
+  plugins: [
+    require('tailwind-scrollbar'),
+  ],
   presets: [uiPreset]
 } 
