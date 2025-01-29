@@ -4,6 +4,7 @@ import KanbanPage from './pages/dnd-kanban';
 import { Button } from '@packages/ui/components/ui/button';
 import { Link } from 'react-router-dom';
 import DndTest from './pages/dnd-test';
+import BoardPage from './pages/board';
 
 function App() {
 
@@ -25,8 +26,8 @@ function App() {
                 </Link>
               </Button>
               <Button asChild variant="outline">
-                <Link to="/dnd-test">
-                  DnD Test Page
+                <Link to="/board">
+                  Board Page
                 </Link>
               </Button>
             </div>
@@ -35,7 +36,7 @@ function App() {
         } />
         <Route path="/dnd-sort" element={<SortPage />} />
         <Route path="/dnd-kanban" element={<KanbanPage />} />
-        <Route path="/dnd-test" element={<DndTest />} />
+        <Route path="/board" element={<BoardPage />} />
       </Routes>
     </Router>
 
