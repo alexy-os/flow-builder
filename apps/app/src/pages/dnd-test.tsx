@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo, useCallback, useMemo } from "react";
 import { Button } from "@packages/ui/components/ui/button";
 import { Plus, ZoomIn, Move } from "lucide-react";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
@@ -21,7 +21,7 @@ const SIDEBAR_COMPONENTS: DraggableComponent[] = [
   { id: 'card', label: 'Card', color: 'bg-purple-500' },
 ];
 
-function Sidebar() {
+const Sidebar = memo(function Sidebar() {
   return (
     <div className="w-64 bg-gray-100 p-4 space-y-4 rounded-lg relative z-10">
       <h2 className="font-semibold text-lg">Components</h2>
@@ -35,20 +35,47 @@ function Sidebar() {
       ))}
     </div>
   );
-}
+});
 
-function DragOverlayContent({ item }: { item: CanvasItem }) {
+const DragOverlayContent = memo(function DragOverlayContent({ item }: { item: CanvasItem }) {
   return (
     <div className={`${item.color} p-4 rounded text-white text-center mb-2 shadow-lg cursor-grabbing z-[100]`}>
       {item.label}
     </div>
   );
-}
+});
+
+const ListItem = memo(function ListItem({ 
+  item, 
+  listId 
+}: { 
+  item: CanvasItem; 
+  listId: string; 
+}) {
+  return (
+    <div className="relative z-[5]">
+      <SortableItem
+        key={item.id}
+        item={item}
+        listId={listId}
+        className={`${item.color} p-4 rounded text-white text-center`}
+      >
+        <div className="cursor-grab active:cursor-grabbing">
+          {item.label}
+        </div>
+      </SortableItem>
+    </div>
+  );
+});
 
 function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) {
   const [isZoomMode, setIsZoomMode] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  const toggleZoomMode = useCallback(() => {
+    setIsZoomMode(prev => !prev);
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current || !contentRef.current || !isZoomMode) return;
@@ -64,15 +91,22 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
           .style('transform', `translate(${event.transform.x}px, ${event.transform.y}px) scale(${event.transform.k})`);
       });
 
-    select(containerRef.current)
-      .call(zoomBehavior as any)
-      .on('dblclick.zoom', null);
+    const container = select(containerRef.current);
+    container.call(zoomBehavior as any).on('dblclick.zoom', null);
 
     return () => {
       select(contentRef.current).style('transform', '');
-      select(containerRef.current).on('.zoom', null);
+      container.on('.zoom', null);
     };
   }, [isZoomMode]);
+
+  const containerClassName = useMemo(() => (
+    `w-[calc(100vw-350px)] h-[calc(100vh-180px)] border rounded-md ${
+      isZoomMode 
+        ? 'overflow-hidden cursor-all-scroll' 
+        : 'overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100'
+    }`
+  ), [isZoomMode]);
 
   return (
     <div className="flex-1">
@@ -82,7 +116,7 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
           Add List
         </Button>
         <Button 
-          onClick={() => setIsZoomMode(!isZoomMode)} 
+          onClick={toggleZoomMode} 
           variant={isZoomMode ? "default" : "outline"} 
           size="sm"
         >
@@ -92,8 +126,7 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
       </div>
       <div 
         ref={containerRef}
-        className={`w-[calc(100vw-350px)] h-[calc(100vh-180px)] border rounded-md 
-          ${isZoomMode ? 'overflow-hidden cursor-all-scroll' : 'overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100'}`}
+        className={containerClassName}
         data-scrollable={!isZoomMode}
       >
         <div 
@@ -113,18 +146,7 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
                 contentClassName="bg-gray-50 p-2 rounded-b space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
                 itemClassName="mb-2"
                 renderItem={(item) => (
-                  <div className="relative z-[5]">
-                    <SortableItem
-                      key={item.id}
-                      item={item}
-                      listId={list.id}
-                      className={`${item.color} p-4 rounded text-white text-center`}
-                    >
-                      <div className="cursor-grab active:cursor-grabbing">
-                        {item.label}
-                      </div>
-                    </SortableItem>
-                  </div>
+                  <ListItem key={item.id} item={item} listId={list.id} />
                 )}
               >
                 <div className="h-20 rounded border-2 border-dashed border-gray-200 mt-3 flex items-center justify-center text-gray-400">
@@ -143,40 +165,38 @@ export default function DndTest() {
   const [lists, setLists] = useState<List[]>([]);
   const [activeItem, setActiveItem] = useState<CanvasItem | null>(null);
 
-  function handleDragStart(event: DragStartEvent) {
+  const handleDragStart = useCallback((event: DragStartEvent) => {
     if (event.active.data.current?.type === 'item') {
       setActiveItem(event.active.data.current.item);
     }
-  }
+  }, []);
 
-  function handleDragEnd(event: DragEndEvent) {
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
     setActiveItem(null);
     const { active, over } = event;
     
     if (!over) return;
 
     if (active.data.current?.type === 'sidebar') {
-      const targetId = over.id.toString();
-      const listId = targetId.replace('droppable-', '');
+      const listId = over.id.toString().replace('droppable-', '');
       const component = active.data.current.component;
       
       if (component) {
-        setLists(currentLists => {
-          return currentLists.map(list => {
-            if (list.id === listId) {
-              return {
-                ...list,
-                items: [...list.items, {
-                  id: `${component.id}-${Date.now()}`,
-                  type: component.id,
-                  color: component.color,
-                  label: component.label
-                }]
-              };
-            }
-            return list;
-          });
-        });
+        setLists(currentLists => 
+          currentLists.map(list => 
+            list.id === listId 
+              ? {
+                  ...list,
+                  items: [...list.items, {
+                    id: `${component.id}-${Date.now()}`,
+                    type: component.id,
+                    color: component.color,
+                    label: component.label
+                  }]
+                }
+              : list
+          )
+        );
       }
     } else if (active.data.current?.type === 'list') {
       const oldIndex = lists.findIndex(list => list.id === active.id);
@@ -186,60 +206,46 @@ export default function DndTest() {
         setLists(lists => arrayMove(lists, oldIndex, newIndex));
       }
     } else if (active.data.current?.type === 'item') {
-      const activeListId = active.data.current.listId;
-      const activeItem = active.data.current.item;
-      const overId = over.id.toString();
-      
-      const overListId = overId.startsWith('droppable-') 
-        ? overId.replace('droppable-', '')
+      const { listId: activeListId, item: activeItem } = active.data.current;
+      const overListId = over.id.toString().startsWith('droppable-')
+        ? over.id.toString().replace('droppable-', '')
         : active.data.current.listId;
 
-      if (activeListId === overListId) {
-        setLists(currentLists => {
-          return currentLists.map(list => {
-            if (list.id === activeListId) {
+      setLists(currentLists => 
+        currentLists.map(list => {
+          if (list.id === activeListId) {
+            if (activeListId === overListId) {
               const oldIndex = list.items.findIndex(item => item.id === active.id);
               const newIndex = list.items.findIndex(item => item.id === over.id);
               
-              if (oldIndex !== -1 && newIndex !== -1) {
-                return {
-                  ...list,
-                  items: arrayMove(list.items, oldIndex, newIndex)
-                };
-              }
+              return oldIndex !== -1 && newIndex !== -1
+                ? { ...list, items: arrayMove(list.items, oldIndex, newIndex) }
+                : list;
             }
-            return list;
-          });
-        });
-      } else {
-        setLists(currentLists => {
-          return currentLists.map(list => {
-            if (list.id === activeListId) {
-              return {
-                ...list,
-                items: list.items.filter(item => item.id !== activeItem.id)
-              };
-            }
-            if (list.id === overListId) {
-              return {
-                ...list,
-                items: [...list.items, activeItem]
-              };
-            }
-            return list;
-          });
-        });
-      }
+            return {
+              ...list,
+              items: list.items.filter(item => item.id !== activeItem.id)
+            };
+          }
+          if (list.id === overListId && activeListId !== overListId) {
+            return {
+              ...list,
+              items: [...list.items, activeItem]
+            };
+          }
+          return list;
+        })
+      );
     }
-  }
+  }, [lists]);
 
-  const handleAddList = () => {
+  const handleAddList = useCallback(() => {
     const newList: List = {
       id: `list-${Date.now()}`,
       items: []
     };
-    setLists([...lists, newList]);
-  };
+    setLists(prev => [...prev, newList]);
+  }, []);
 
   return (
     <div className="p-8 h-screen overflow-hidden">
