@@ -106,9 +106,11 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
               <SortableList
                 key={list.id}
                 list={list}
-                className="w-80 flex-shrink-0 sortable-list cursor-default h-fit max-h-full flex flex-col"
+                className={`w-80 flex-shrink-0 sortable-list cursor-default ${
+                  isZoomMode ? "h-auto" : "h-full"
+                }`}
                 headerClassName={`bg-gray-100 p-2 rounded-t ${isZoomMode ? "cursor-grabbing" : "cursor-move"}`}
-                contentClassName="bg-gray-50 p-2 rounded-b space-y-3 overflow-y-auto"
+                contentClassName="bg-gray-50 p-2 rounded-b space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
                 itemClassName="mb-2"
                 renderItem={(item) => (
                   <div className="relative z-[5]">
