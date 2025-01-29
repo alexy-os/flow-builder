@@ -30,7 +30,7 @@ function Sidebar() {
           key={component.id}
           component={component}
           prefix="sidebar-"
-          className={`${component.color} w-full p-4 rounded cursor-move text-white text-center`}
+          className={`${component.color} w-full p-4 rounded cursor-move active:cursor-grabbing text-white text-center`}
         />
       ))}
     </div>
@@ -54,7 +54,11 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
     if (!containerRef.current || !contentRef.current || !isZoomMode) return;
 
     const zoomBehavior = zoom()
-      .scaleExtent([0.5, 2])
+      .scaleExtent([0.3, 2.5])
+      .filter(event => {
+        const target = event.target as HTMLElement;
+        return !target.closest('.sortable-list');
+      })
       .on('zoom', (event) => {
         select(contentRef.current)
           .style('transform', `translate(${event.transform.x}px, ${event.transform.y}px) scale(${event.transform.k})`);
@@ -65,7 +69,6 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
       .on('dblclick.zoom', null);
 
     return () => {
-      // Сброс зума при выключении режима
       select(contentRef.current).style('transform', '');
       select(containerRef.current).on('.zoom', null);
     };
@@ -90,21 +93,21 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
       <div 
         ref={containerRef}
         className={`w-[calc(100vw-350px)] h-[calc(100vh-180px)] border rounded-md 
-          ${isZoomMode ? 'overflow-hidden' : 'overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100'}`}
+          ${isZoomMode ? 'overflow-hidden cursor-all-scroll' : 'overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100'}`}
         data-scrollable={!isZoomMode}
       >
         <div 
           ref={contentRef}
-          className={`${isZoomMode ? 'w-full h-full' : ''}`}
+          className="cursor-default"
           style={{ transformOrigin: '0 0' }}
         >
-          <div className="flex space-x-4 p-4 w-max min-h-full">
+          <div className="flex space-x-4 p-4">
             {lists.map((list) => (
               <SortableList
                 key={list.id}
                 list={list}
-                className="w-80 flex-shrink-0"
-                headerClassName="bg-gray-100 p-2 rounded-t cursor-move"
+                className="w-80 flex-shrink-0 sortable-list"
+                headerClassName={`bg-gray-100 p-2 rounded-t ${isZoomMode ? "cursor-grabbing" : "cursor-move"}`}
                 contentClassName="bg-gray-50 p-2 rounded-b space-y-3"
                 itemClassName="mb-2"
                 renderItem={(item) => (
@@ -113,7 +116,7 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
                       key={item.id}
                       item={item}
                       listId={list.id}
-                      className={`${item.color} p-4 rounded text-white text-center touch-none`}
+                      className={`${item.color} p-4 rounded text-white text-center`}
                     >
                       <div className="cursor-grab active:cursor-grabbing">
                         {item.label}
