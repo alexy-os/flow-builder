@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Button } from "@packages/ui/components/ui/button";
-import { Plus, ZoomIn, Move } from "lucide-react";
+import { Plus } from "lucide-react";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { horizontalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { 
@@ -12,8 +12,6 @@ import {
   type List, 
   type DraggableComponent 
 } from "@packages/dnd";
-import { zoom } from "d3-zoom";
-import { select } from "d3-selection";
 
 const SIDEBAR_COMPONENTS: DraggableComponent[] = [
   { id: 'button', label: 'Button', color: 'bg-blue-500' },
@@ -46,88 +44,51 @@ function DragOverlayContent({ item }: { item: CanvasItem }) {
 }
 
 function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) {
-  const [isZoomMode, setIsZoomMode] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!containerRef.current || !contentRef.current || !isZoomMode) return;
-
-    const zoomBehavior = zoom()
-      .scaleExtent([0.5, 2])
-      .on('zoom', (event) => {
-        select(contentRef.current)
-          .style('transform', `translate(${event.transform.x}px, ${event.transform.y}px) scale(${event.transform.k})`);
-      });
-
-    select(containerRef.current)
-      .call(zoomBehavior as any)
-      .on('dblclick.zoom', null);
-
-    return () => {
-      // Сброс зума при выключении режима
-      select(contentRef.current).style('transform', '');
-      select(containerRef.current).on('.zoom', null);
-    };
-  }, [isZoomMode]);
-
   return (
     <div className="flex-1">
-      <div className="mb-4 flex gap-2 items-center">
+      <div className="mb-4">
         <Button onClick={onAddList} variant="outline" size="sm">
           <Plus className="w-4 h-4 mr-2" />
           Add List
         </Button>
-        <Button 
-          onClick={() => setIsZoomMode(!isZoomMode)} 
-          variant={isZoomMode ? "default" : "outline"} 
-          size="sm"
-        >
-          {isZoomMode ? <Move className="w-4 h-4 mr-2" /> : <ZoomIn className="w-4 h-4 mr-2" />}
-          {isZoomMode ? 'Pan Mode' : 'List Mode'}
-        </Button>
       </div>
       <div 
-        ref={containerRef}
-        className={`w-[calc(100vw-350px)] h-[calc(100vh-180px)] border rounded-md 
-          ${isZoomMode ? 'overflow-hidden' : 'overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100'}`}
-        data-scrollable={!isZoomMode}
+        className="w-[calc(100vw-350px)] h-[calc(100vh-180px)] border rounded-md overflow-auto
+          scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100
+          hover:scrollbar-thumb-gray-400 
+          dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800
+          dark:hover:scrollbar-thumb-gray-500"
+        data-scrollable
       >
-        <div 
-          ref={contentRef}
-          className={`${isZoomMode ? 'w-full h-full' : ''}`}
-          style={{ transformOrigin: '0 0' }}
-        >
-          <div className="flex space-x-4 p-4 w-max min-h-full">
-            {lists.map((list) => (
-              <SortableList
-                key={list.id}
-                list={list}
-                className="w-80 flex-shrink-0"
-                headerClassName="bg-gray-100 p-2 rounded-t cursor-move"
-                contentClassName="bg-gray-50 p-2 rounded-b space-y-3"
-                itemClassName="mb-2"
-                renderItem={(item) => (
-                  <div className="relative z-[5]">
-                    <SortableItem
-                      key={item.id}
-                      item={item}
-                      listId={list.id}
-                      className={`${item.color} p-4 rounded text-white text-center touch-none`}
-                    >
-                      <div className="cursor-grab active:cursor-grabbing">
-                        {item.label}
-                      </div>
-                    </SortableItem>
-                  </div>
-                )}
-              >
-                <div className="h-20 rounded border-2 border-dashed border-gray-200 mt-3 flex items-center justify-center text-gray-400">
-                  Drop here
+        <div className="flex space-x-4 p-4 w-max min-h-full">
+          {lists.map((list) => (
+            <SortableList
+              key={list.id}
+              list={list}
+              className="w-80 flex-shrink-0"
+              headerClassName="bg-gray-100 p-2 rounded-t cursor-move"
+              contentClassName="bg-gray-50 p-2 rounded-b space-y-3"
+              itemClassName="mb-2"
+              renderItem={(item) => (
+                <div className="relative z-[5]">
+                  <SortableItem
+                    key={item.id}
+                    item={item}
+                    listId={list.id}
+                    className={`${item.color} p-4 rounded text-white text-center touch-none`}
+                  >
+                    <div className="cursor-grab active:cursor-grabbing">
+                      {item.label}
+                    </div>
+                  </SortableItem>
                 </div>
-              </SortableList>
-            ))}
-          </div>
+              )}
+            >
+              <div className="h-20 rounded border-2 border-dashed border-gray-200 mt-3 flex items-center justify-center text-gray-400">
+                Drop here
+              </div>
+            </SortableList>
+          ))}
         </div>
       </div>
     </div>
