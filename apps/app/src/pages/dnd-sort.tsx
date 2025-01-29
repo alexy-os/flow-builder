@@ -27,7 +27,7 @@ function SidebarItem({ component }: { component: typeof SIDEBAR_COMPONENTS[0] })
       style={style}
       {...listeners}
       {...attributes}
-      className={`${component.color} w-full p-4 rounded cursor-move text-white text-center`}
+      className={`${component.color} w-full p-4 rounded cursor-grab active:cursor-grabbing text-white text-center`}
     >
       {component.label}
     </div>

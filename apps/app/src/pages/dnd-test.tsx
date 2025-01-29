@@ -98,15 +98,15 @@ function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) 
       >
         <div 
           ref={contentRef}
-          className="cursor-default"
+          className=""
           style={{ transformOrigin: '0 0' }}
         >
-          <div className="flex space-x-4 p-4">
+          <div className="flex space-x-">
             {lists.map((list) => (
               <SortableList
                 key={list.id}
                 list={list}
-                className="w-80 flex-shrink-0 sortable-list"
+                className="w-80 flex-shrink-0 sortable-list cursor-default"
                 headerClassName={`bg-gray-100 p-2 rounded-t ${isZoomMode ? "cursor-grabbing" : "cursor-move"}`}
                 contentClassName="bg-gray-50 p-2 rounded-b space-y-3"
                 itemClassName="mb-2"

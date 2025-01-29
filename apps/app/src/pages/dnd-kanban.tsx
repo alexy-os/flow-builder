@@ -2,7 +2,7 @@ import { DndContext, useDraggable, useDroppable, DragOverlay } from "@dnd-kit/co
 import { SortableContext, useSortable, arrayMove, horizontalListSortingStrategy } from "@dnd-kit/sortable";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Button } from "@packages/ui/components/ui/button";
 import { Plus } from "lucide-react";
 
@@ -29,7 +29,7 @@ function SidebarItem({ component }: { component: typeof SIDEBAR_COMPONENTS[0] })
       style={style}
       {...listeners}
       {...attributes}
-      className={`${component.color} w-full p-4 rounded cursor-move text-white text-center`}
+      className={`${component.color} w-full p-4 rounded cursor-grab active:cursor-grabbing text-white text-center`}
     >
       {component.label}
     </div>
@@ -139,7 +139,7 @@ function SortableList({ list }: { list: List }) {
       <div
         {...attributes}
         {...listeners}
-        className="bg-gray-100 p-2 rounded-t cursor-move"
+        className="bg-gray-100 p-2 rounded-t cursor-grab active:cursor-grabbing"
       >
         <h3 className="font-medium">List</h3>
       </div>
@@ -161,9 +161,10 @@ function SortableList({ list }: { list: List }) {
   );
 }
 
-function Canvas({ lists, onAddList }: { 
+function Canvas({ lists, onAddList, children }: { 
   lists: List[]; 
   onAddList: () => void;
+  children: React.ReactNode;
 }) {
   return (
     <div className="flex-1 overflow-hidden">
@@ -189,126 +190,163 @@ function Canvas({ lists, onAddList }: {
           overflowY: 'hidden'
         }}
       >
-        <SortableContext 
-          items={lists.map(list => list.id)}
-          strategy={horizontalListSortingStrategy}
-        >
-          {lists.map((list) => (
-            <SortableList 
-              key={list.id} 
-              list={list}
-            />
-          ))}
-        </SortableContext>
+        {children}
       </div>
     </div>
   );
 }
 
-function DragOverlayContent({ item }: { item: CanvasItem }) {
-  return (
-    <div
-      className={`${item.color} p-4 rounded text-white text-center mb-2 shadow-lg cursor-grabbing`}
-    >
-      {item.label}
-    </div>
-  );
+function DragOverlayContent({ 
+  item, 
+  component,
+  list 
+}: { 
+  item?: CanvasItem; 
+  component?: typeof SIDEBAR_COMPONENTS[0];
+  list?: List;
+}) {
+  if (component) {
+    return (
+      <div
+        className={`${component.color} w-64 p-4 rounded cursor-grabbing text-white text-center shadow-lg`}
+      >
+        {component.label}
+      </div>
+    );
+  }
+
+  if (item) {
+    return (
+      <div
+        className={`${item.color} p-4 rounded text-white text-center mb-2 shadow-lg cursor-grabbing`}
+      >
+        {item.label}
+      </div>
+    );
+  }
+
+  if (list) {
+    return (
+      <div className="w-80 flex-shrink-0 shadow-lg">
+        <div className="bg-gray-100 p-2 rounded cursor-grabbing">
+          <h3 className="font-medium">List</h3>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
 }
 
 export default function KanbanPage() {
   const [lists, setLists] = useState<List[]>([]);
   const [activeItem, setActiveItem] = useState<CanvasItem | null>(null);
+  const [activeSidebarItem, setActiveSidebarItem] = useState<typeof SIDEBAR_COMPONENTS[0] | null>(null);
+  const [activeList, setActiveList] = useState<List | null>(null);
 
-  function handleDragStart(event: DragStartEvent) {
-    if (event.active.data.current?.type === 'item') {
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    if (event.active.id.toString().startsWith('sidebar-')) {
+      const componentId = event.active.id.toString().replace('sidebar-', '');
+      const component = SIDEBAR_COMPONENTS.find(c => c.id === componentId);
+      if (component) {
+        setActiveSidebarItem(component);
+      }
+    } else if (event.active.data.current?.type === 'item') {
       setActiveItem(event.active.data.current.item);
+    } else if (event.active.data.current?.type === 'list') {
+      setActiveList(event.active.data.current.list);
     }
-  }
+  }, []);
 
-  function handleDragEnd(event: DragEndEvent) {
-    setActiveItem(null);
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
     
+    setActiveItem(null);
+    setActiveSidebarItem(null);
+    setActiveList(null);
+
     if (!over) return;
 
-    if (active.id.toString().startsWith('sidebar-')) {
-      const targetId = over.id.toString();
-      const listId = targetId.replace('droppable-', '');
-      const componentId = active.id.toString().replace('sidebar-', '');
-      const component = SIDEBAR_COMPONENTS.find(c => c.id === componentId);
-      
-      if (component) {
-        setLists(currentLists => {
-          return currentLists.map(list => {
-            if (list.id === listId) {
-              return {
-                ...list,
-                items: [...list.items, {
-                  id: `${component.id}-${Date.now()}`,
-                  type: component.id,
-                  color: component.color,
-                  label: component.label
-                }]
-              };
-            }
-            return list;
-          });
-        });
-      }
-    } else if (active.data.current?.type === 'list') {
+    if (active.data.current?.type === 'list' && over.data.current?.type === 'list') {
       const oldIndex = lists.findIndex(list => list.id === active.id);
       const newIndex = lists.findIndex(list => list.id === over.id);
       
       if (oldIndex !== -1 && newIndex !== -1) {
         setLists(lists => arrayMove(lists, oldIndex, newIndex));
       }
-    } else if (active.data.current?.type === 'item') {
-      const activeListId = active.data.current.listId;
-      const activeItem = active.data.current.item;
-      const overId = over.id.toString();
-      
-      const overListId = overId.startsWith('droppable-') 
-        ? overId.replace('droppable-', '')
-        : active.data.current.listId;
-
-      if (activeListId === overListId) {
-        setLists(currentLists => {
-          return currentLists.map(list => {
-            if (list.id === activeListId) {
-              const oldIndex = list.items.findIndex(item => item.id === active.id);
-              const newIndex = list.items.findIndex(item => item.id === over.id);
-              
-              if (oldIndex !== -1 && newIndex !== -1) {
+    } else {
+      if (active.id.toString().startsWith('sidebar-')) {
+        const targetId = over.id.toString();
+        const listId = targetId.replace('droppable-', '');
+        const componentId = active.id.toString().replace('sidebar-', '');
+        const component = SIDEBAR_COMPONENTS.find(c => c.id === componentId);
+        
+        if (component) {
+          setLists(currentLists => {
+            return currentLists.map(list => {
+              if (list.id === listId) {
                 return {
                   ...list,
-                  items: arrayMove(list.items, oldIndex, newIndex)
+                  items: [...list.items, {
+                    id: `${component.id}-${Date.now()}`,
+                    type: component.id,
+                    color: component.color,
+                    label: component.label
+                  }]
                 };
               }
-            }
-            return list;
+              return list;
+            });
           });
-        });
-      } else {
-        setLists(currentLists => {
-          return currentLists.map(list => {
-            if (list.id === activeListId) {
-              return {
-                ...list,
-                items: list.items.filter(item => item.id !== activeItem.id)
-              };
-            }
-            if (list.id === overListId) {
-              return {
-                ...list,
-                items: [...list.items, activeItem]
-              };
-            }
-            return list;
+        }
+      } else if (active.data.current?.type === 'item') {
+        const activeListId = active.data.current.listId;
+        const activeItem = active.data.current.item;
+        const overId = over.id.toString();
+        
+        const overListId = overId.startsWith('droppable-') 
+          ? overId.replace('droppable-', '')
+          : active.data.current.listId;
+
+        if (activeListId === overListId) {
+          setLists(currentLists => {
+            return currentLists.map(list => {
+              if (list.id === activeListId) {
+                const oldIndex = list.items.findIndex(item => item.id === active.id);
+                const newIndex = list.items.findIndex(item => item.id === over.id);
+                
+                if (oldIndex !== -1 && newIndex !== -1) {
+                  return {
+                    ...list,
+                    items: arrayMove(list.items, oldIndex, newIndex)
+                  };
+                }
+              }
+              return list;
+            });
           });
-        });
+        } else {
+          setLists(currentLists => {
+            return currentLists.map(list => {
+              if (list.id === activeListId) {
+                return {
+                  ...list,
+                  items: list.items.filter(item => item.id !== activeItem.id)
+                };
+              }
+              if (list.id === overListId) {
+                return {
+                  ...list,
+                  items: [...list.items, activeItem]
+                };
+              }
+              return list;
+            });
+          });
+        }
       }
     }
-  }
+  }, [lists]);
 
   const handleAddList = () => {
     const newList: List = {
@@ -317,6 +355,8 @@ export default function KanbanPage() {
     };
     setLists([...lists, newList]);
   };
+
+  const sortableListIds = useMemo(() => lists.map(list => list.id), [lists]);
 
   return (
     <div className="p-8 h-screen overflow-hidden">
@@ -327,14 +367,29 @@ export default function KanbanPage() {
       >
         <div className="flex gap-8 h-[calc(100vh-120px)]">
           <Sidebar />
-          <Canvas 
-            lists={lists} 
-            onAddList={handleAddList}
-          />
+          <Canvas lists={lists} onAddList={handleAddList}>
+            <SortableContext 
+              items={sortableListIds}
+              strategy={horizontalListSortingStrategy}
+            >
+              {lists.map((list) => (
+                <SortableList 
+                  key={list.id} 
+                  list={list}
+                />
+              ))}
+            </SortableContext>
+          </Canvas>
         </div>
 
         <DragOverlay>
-          {activeItem ? <DragOverlayContent item={activeItem} /> : null}
+          {activeSidebarItem ? (
+            <DragOverlayContent component={activeSidebarItem} />
+          ) : activeItem ? (
+            <DragOverlayContent item={activeItem} />
+          ) : activeList ? (
+            <DragOverlayContent list={activeList} />
+          ) : null}
         </DragOverlay>
       </DndContext>
     </div>
