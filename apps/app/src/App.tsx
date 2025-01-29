@@ -3,6 +3,7 @@ import SortPage from './pages/dnd-sort';
 import KanbanPage from './pages/dnd-kanban';
 import { Button } from '@packages/ui/components/ui/button';
 import { Link } from 'react-router-dom';
+import DndTest from './pages/dnd-test';
 
 function App() {
 
@@ -23,13 +24,21 @@ function App() {
                   DnD Kanban Page
                 </Link>
               </Button>
+              <Button asChild variant="outline">
+                <Link to="/dnd-test">
+                  DnD Test Page
+                </Link>
+              </Button>
             </div>
           </div>
+
         } />
         <Route path="/dnd-sort" element={<SortPage />} />
         <Route path="/dnd-kanban" element={<KanbanPage />} />
+        <Route path="/dnd-test" element={<DndTest />} />
       </Routes>
     </Router>
+
   );
 }
 

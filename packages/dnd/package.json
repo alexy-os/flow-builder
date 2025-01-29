@@ -1,0 +1,28 @@
+{
+    "name": "@packages/dnd",
+    "version": "0.0.0",
+    "private": true,
+    "license": "MIT",
+    "publishConfig": {
+        "access": "public"
+    },
+    "type": "module",
+    "scripts": {
+        "dev": "vite build"
+    },
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./components/*": "./src/components/*",
+    "./core/*": "./src/core/*"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0"
+
+  }
+}
