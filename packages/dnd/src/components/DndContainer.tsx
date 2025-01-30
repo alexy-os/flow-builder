@@ -22,19 +22,25 @@ export function DndContainer({
   overlayContent
 }: DndContainerProps) {
   return (
-    <DndContext
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-    >
-      <SortableContext 
-        items={lists.map(list => list.id)}
-        strategy={strategy}
+    <div className="relative" style={{ isolation: 'isolate' }}>
+      <DndContext
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
       >
-        {children}
-      </SortableContext>
-      <DragOverlay>
-        {overlayContent}
-      </DragOverlay>
-    </DndContext>
+        <SortableContext 
+          items={lists.map(list => list.id)}
+          strategy={strategy}
+        >
+          {children}
+        </SortableContext>
+        <DragOverlay style={{ 
+          zIndex: 50,
+          position: 'fixed',
+          pointerEvents: 'none'
+        }}>
+          {overlayContent}
+        </DragOverlay>
+      </DndContext>
+    </div>
   );
 } 

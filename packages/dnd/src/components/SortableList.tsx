@@ -60,11 +60,15 @@ export function SortableList({
       <div {...attributes} {...listeners} className={headerClassName}>
         {renderHeader?.() || <h3>List</h3>}
       </div>
-      <div ref={setDroppableRef} className={contentClassName}>
+      <div 
+        ref={setDroppableRef} 
+        className={contentClassName}
+        style={{ position: 'relative', zIndex: 0 }}
+      >
         <SortableContext items={list.items.map(item => item.id)}>
           {list.items.map((item) => (
             renderItem ? (
-              <div key={item.id} className="relative z-[5]">
+              <div key={item.id} className="relative" style={{ zIndex: 1 }}>
                 {renderItem(item)}
               </div>
             ) : (
@@ -77,7 +81,9 @@ export function SortableList({
             )
           ))}
         </SortableContext>
-        {children}
+        <div style={{ position: 'relative', zIndex: 0 }}>
+          {children}
+        </div>
       </div>
     </div>
   );
