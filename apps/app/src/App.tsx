@@ -5,9 +5,10 @@ import { CleanLayout } from './components/layout/CleanLayout';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { LayoutProvider } from './contexts/LayoutContext';
 import { SidebarProvider } from '@packages/ui/components/ui/sidebar';
+import FlowPage from './pages/flow';
 
 const HomePage = lazy(() => import('./pages/home').then(module => ({ default: module.HomePage })));
-const FlowPage = lazy(() => import('./pages/flow').then(module => ({ default: module.FlowPage })));
+// bug const FlowPage = lazy(() => import('./pages/flow').then(module => ({ default: module.FlowPage })));
 
 const router = createBrowserRouter([
   {
@@ -26,13 +27,17 @@ const router = createBrowserRouter([
   {
     element: <MainLayout />,
     children: [
-      {
-        path: "/flow",
+      {/*
+        path: "/flow-bug",
         element: (
           <Suspense fallback={<LoadingSpinner fullScreen />}>
             <FlowPage />
           </Suspense>
         )
+      */},
+      {
+        path: "/flow",
+        element: <FlowPage />
       }
     ]
   }

@@ -1,5 +1,4 @@
 import { Outlet } from 'react-router-dom';
-import { useLayout } from '../../contexts/LayoutContext';
 import { Command, LayoutGrid, Settings, File } from 'lucide-react';
 import {
   Sidebar,
@@ -12,23 +11,21 @@ import {
   SidebarTrigger,
 } from '@packages/ui/components/ui/sidebar';
 import { Link, useLocation } from 'react-router-dom';
-import { cn } from '@packages/ui/lib/utils';
 
 const MENU_ITEMS = [
   { 
     icon: LayoutGrid, 
     label: 'Dashboard', 
-    path: '/dashboard' 
+    path: '/' 
   },
   { 
     icon: File, 
     label: 'Flow Editor', 
     path: '/flow' 
-  },
+  }
 ];
 
 export function MainLayout() {
-  const { sidebar, isBuilderSidebarVisible } = useLayout();
   const location = useLocation();
 
   return (
@@ -84,27 +81,10 @@ export function MainLayout() {
         </SidebarFooter>
       </Sidebar>
 
-      <div className="flex-1 flex min-w-0">
-        {/* Сайдбар страницы */}
-        <aside 
-          className={cn(
-            "border-r bg-background transition-all duration-200 ease-in-out",
-            isBuilderSidebarVisible ? "w-[300px]" : "w-0"
-          )}
-        >
-          <div className={cn(
-            "w-[300px] transition-all duration-200",
-            isBuilderSidebarVisible ? "translate-x-0" : "-translate-x-full"
-          )}>
-            {sidebar}
-          </div>
-        </aside>
-
-        {/* Основной контент */}
-        <main className="flex-1 min-w-0 overflow-hidden">
-          <Outlet />
-        </main>
-      </div>
+      {/* Основной контент */}
+      <main className="flex-1 min-w-0 overflow-hidden">
+        <Outlet />
+      </main>
     </div>
   );
 } 

@@ -1,23 +1,24 @@
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
+import { Button } from "@packages/ui/components/ui/button";
+import { Plus, ZoomIn, Move, PanelLeftClose, PanelLeft } from "lucide-react";
 import { SortableList } from "@packages/dnd";
 import type { List } from "@packages/dnd";
 import { zoom } from "d3-zoom";
 import { select } from "d3-selection";
 import { ListItem } from "./ListItem";
-import { Header } from "./Header";
 import { cn } from "@packages/ui/lib/utils";
-import {
-  useDroppable
-} from '@dnd-kit/core';
+import { useDroppable } from '@dnd-kit/core';
+import { useLayout } from "../../../contexts/LayoutContext";
 
 export const Canvas = memo(function Canvas({ lists, onAddList }: { lists: List[]; onAddList: () => void }) {
   const [isZoomMode, setIsZoomMode] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const { setIsBuilderSidebarVisible, isBuilderSidebarVisible } = useLayout();
 
   const toggleZoomMode = useCallback(() => {
-    setIsZoomMode(prev => !prev);
-  }, []);
+    setIsZoomMode(!isZoomMode);
+  }, [isZoomMode]);
 
   useEffect(() => {
     if (!containerRef.current || !contentRef.current || !isZoomMode) return;
@@ -56,15 +57,42 @@ export const Canvas = memo(function Canvas({ lists, onAddList }: { lists: List[]
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <Header 
-        onAddList={onAddList}
-        isZoomMode={isZoomMode}
-        toggleZoomMode={toggleZoomMode}
-      />
       <div className={cn(
         "flex-1 w-full flex flex-col",
         isZoomMode ? "overflow-hidden" : "overflow-hidden"
       )}>
+        <div className="flex gap-3.5 items-center border-b p-4 h-16 flex-shrink-0">
+            <Button 
+              onClick={() => setIsBuilderSidebarVisible(!isBuilderSidebarVisible)}
+              variant="outline" 
+              size="sm"
+            >
+              {isBuilderSidebarVisible ? (
+                <>
+                  <PanelLeftClose className="w-4 h-4 mr-2" />
+                </>
+              ) : (
+                <>
+                  <PanelLeft className="w-4 h-4 mr-2" />
+                </>
+              )}
+            </Button>
+          <div className="text-base font-medium text-foreground">Canvas</div>
+          <div className="flex gap-2 ml-auto">
+            <Button onClick={onAddList} variant="outline" size="sm">
+              <Plus className="w-4 h-4 mr-2" />
+              Add List
+            </Button>
+            <Button 
+              onClick={toggleZoomMode} 
+              variant={isZoomMode ? "default" : "outline"} 
+              size="sm"
+            >
+              {isZoomMode ? <Move className="w-4 h-4 mr-2" /> : <ZoomIn className="w-4 h-4 mr-2" />}
+              {isZoomMode ? 'Pan Mode' : 'List Mode'}
+            </Button>
+          </div>
+        </div>
         <div 
           ref={setNodeRef}
           className={cn(
@@ -74,8 +102,11 @@ export const Canvas = memo(function Canvas({ lists, onAddList }: { lists: List[]
         >
           <div 
             ref={containerRef}
-            className={containerClassName}
-            data-scrollable={!isZoomMode}
+            className={cn(
+              "flex-1",
+              "transition-all duration-200 ease-in-out",
+              isBuilderSidebarVisible ? "w-[calc(100vw-300px)]" : "w-full"
+            )}
           >
             <div 
               ref={contentRef}

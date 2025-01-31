@@ -1,42 +1,36 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 
-type LayoutContextType = {
-  sidebar: ReactNode | null;
-  setSidebar: (content: ReactNode | null) => void;
-  isCollapsed: boolean;
-  setIsCollapsed: (collapsed: boolean) => void;
+interface LayoutContextType {
   isBuilderSidebarVisible: boolean;
-  setIsBuilderSidebarVisible: (visible: boolean) => void;
-};
+  toggleBuilderSidebar: () => void;
+  setIsBuilderSidebarVisible: (value: boolean) => void;
+}
 
-const LayoutContext = createContext<LayoutContextType | null>(null);
+const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
+
+export function LayoutProvider({ children }: { children: ReactNode }) {
+  const [isBuilderSidebarVisible, setIsBuilderSidebarVisible] = useState(true);
+
+  const toggleBuilderSidebar = () => {
+    setIsBuilderSidebarVisible(prev => !prev);
+  };
+
+  return (
+    <LayoutContext.Provider value={{
+      isBuilderSidebarVisible,
+      toggleBuilderSidebar,
+      setIsBuilderSidebarVisible
+    }}>
+      {children}
+    </LayoutContext.Provider>
+  );
+}
 
 export function useLayout() {
   const context = useContext(LayoutContext);
   if (!context) {
-    throw new Error('useLayout must be used within LayoutProvider');
+    throw new Error('useLayout must be used within a LayoutProvider');
   }
   return context;
-}
-
-export function LayoutProvider({ children }: { children: ReactNode }) {
-  const [sidebar, setSidebar] = useState<ReactNode | null>(null);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isBuilderSidebarVisible, setIsBuilderSidebarVisible] = useState(true);
-
-  return (
-    <LayoutContext.Provider
-      value={{
-        sidebar,
-        setSidebar,
-        isCollapsed,
-        setIsCollapsed,
-        isBuilderSidebarVisible,
-        setIsBuilderSidebarVisible,
-      }}
-    >
-      {children}
-    </LayoutContext.Provider>
-  );
 } 
