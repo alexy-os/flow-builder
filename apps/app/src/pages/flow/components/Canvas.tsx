@@ -6,6 +6,7 @@ import type { List } from "@packages/dnd";
 import { zoom } from "d3-zoom";
 import { select } from "d3-selection";
 import { ListItem } from "./ListItem";
+import { Header } from "./Header";
 import { cn } from "@packages/ui/lib/utils";
 import {
   useDroppable
@@ -57,27 +58,15 @@ export const Canvas = memo(function Canvas({ lists, onAddList }: { lists: List[]
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
+      <Header 
+        onAddList={onAddList}
+        isZoomMode={isZoomMode}
+        toggleZoomMode={toggleZoomMode}
+      />
       <div className={cn(
         "flex-1 w-full flex flex-col",
         isZoomMode ? "overflow-hidden" : "overflow-hidden"
       )}>
-        <div className="flex gap-3.5 items-center border-b p-4 h-16 flex-shrink-0">
-          <div className="text-base font-medium text-foreground">Canvas</div>
-          <div className="flex gap-2 ml-auto">
-            <Button onClick={onAddList} variant="outline" size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Add List
-            </Button>
-            <Button 
-              onClick={toggleZoomMode} 
-              variant={isZoomMode ? "default" : "outline"} 
-              size="sm"
-            >
-              {isZoomMode ? <Move className="w-4 h-4 mr-2" /> : <ZoomIn className="w-4 h-4 mr-2" />}
-              {isZoomMode ? 'Pan Mode' : 'List Mode'}
-            </Button>
-          </div>
-        </div>
         <div 
           ref={setNodeRef}
           className={cn(

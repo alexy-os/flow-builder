@@ -1,56 +1,50 @@
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { MainLayout } from './components/layout/MainLayout';
-import { Button } from '@packages/ui/components/ui/button';
-import { Link } from 'react-router-dom';
-import FlowPage from './pages/flow';
-import BuildPage from './pages/build';
-import BoardPage from './pages/board';
+import { CleanLayout } from './components/layout/CleanLayout';
+import { LoadingSpinner } from './components/ui/LoadingSpinner';
+import { LayoutProvider } from './contexts/LayoutContext';
+import { SidebarProvider } from '@packages/ui/components/ui/sidebar';
+
+const HomePage = lazy(() => import('./pages/home').then(module => ({ default: module.HomePage })));
+const FlowPage = lazy(() => import('./pages/flow').then(module => ({ default: module.FlowPage })));
+
+const router = createBrowserRouter([
+  {
+    element: <CleanLayout />,
+    children: [
+      {
+        path: "/",
+        element: (
+          <Suspense fallback={<LoadingSpinner fullScreen />}>
+            <HomePage />
+          </Suspense>
+        )
+      }
+    ]
+  },
+  {
+    element: <MainLayout />,
+    children: [
+      {
+        path: "/flow",
+        element: (
+          <Suspense fallback={<LoadingSpinner fullScreen />}>
+            <FlowPage />
+          </Suspense>
+        )
+      }
+    ]
+  }
+]);
 
 function App() {
   return (
-    <Router>
-      <Routes><Route path="/" element={
-          <div className="flex flex-col items-center justify-center h-screen">
-            <h1 className="text-2xl font-bold">Welcome to Flow Builder</h1>
-            <div className="mt-4 space-y-2">
-              <Button asChild variant="outline">
-                <Link to="/board">
-                  Board Page
-                </Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link to="/flow">
-                  Flow Page
-                </Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link to="/build">
-                  Build Page
-                </Link>
-              </Button>
-            </div>
-          </div>
-
-        } />
-        <Route 
-          path="/flow" 
-          element={
-            <MainLayout sidebar={<FlowPage />}>
-              <FlowPage />
-            </MainLayout>
-          } 
-        />
-        <Route 
-          path="/build" 
-          element={
-            <MainLayout sidebar={<BuildPage />}>
-              <BuildPage />
-            </MainLayout>
-          } 
-        />
-        <Route path="/board" element={<BoardPage />} />
-      </Routes>
-    </Router>
+    <SidebarProvider defaultOpen>
+      <LayoutProvider>
+        <RouterProvider router={router} />
+      </LayoutProvider>
+    </SidebarProvider>
   );
 }
 

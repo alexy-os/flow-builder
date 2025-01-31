@@ -4,6 +4,7 @@ import App from './App';
 import './index.css';
 import "@packages/ui/styles/index.css";
 
+// Strict mode is disabled in production
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
