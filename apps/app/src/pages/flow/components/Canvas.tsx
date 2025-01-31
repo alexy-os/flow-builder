@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
-import { Button } from "@packages/ui/components/ui/button";
-import { Plus, ZoomIn, Move } from "lucide-react";
 import { SortableList } from "@packages/dnd";
 import type { List } from "@packages/dnd";
 import { zoom } from "d3-zoom";

@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { useLayout } from '../../contexts/LayoutContext';
-import { Command, ChevronLeft, LayoutGrid, Settings, File } from 'lucide-react';
+import { Command, LayoutGrid, Settings, File } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +12,7 @@ import {
   SidebarTrigger,
 } from '@packages/ui/components/ui/sidebar';
 import { Link, useLocation } from 'react-router-dom';
+import { cn } from '@packages/ui/lib/utils';
 
 const MENU_ITEMS = [
   { 
@@ -85,17 +86,19 @@ export function MainLayout() {
 
       <div className="flex-1 flex min-w-0">
         {/* Сайдбар страницы */}
-        {sidebar && (
-          <aside className={`
-            w-[300px] border-r bg-background
-            transition-all duration-200
-            ${isBuilderSidebarVisible ? 'w-[300px]' : 'w-0 opacity-0'}
-          `}>
-            <div className="w-[300px]">
-              {sidebar}
-            </div>
-          </aside>
-        )}
+        <aside 
+          className={cn(
+            "border-r bg-background transition-all duration-200 ease-in-out",
+            isBuilderSidebarVisible ? "w-[300px]" : "w-0"
+          )}
+        >
+          <div className={cn(
+            "w-[300px] transition-all duration-200",
+            isBuilderSidebarVisible ? "translate-x-0" : "-translate-x-full"
+          )}>
+            {sidebar}
+          </div>
+        </aside>
 
         {/* Основной контент */}
         <main className="flex-1 min-w-0 overflow-hidden">
