@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { Command, LayoutGrid, Settings, File } from 'lucide-react';
+import { Command, LayoutGrid, Settings, LucideFlower, LucideHome } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -10,16 +10,22 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from '@packages/ui/components/ui/sidebar';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { SidebarProvider } from '@packages/ui/components/ui/sidebar';
 
 const MENU_ITEMS = [
   { 
-    icon: LayoutGrid, 
-    label: 'Dashboard', 
+    icon: LucideHome, 
+    label: 'Home Page', 
     path: '/' 
   },
   { 
-    icon: File, 
+    icon: LayoutGrid, 
+    label: 'Welcome', 
+    path: '/welcome' 
+  },
+  { 
+    icon: LucideFlower, 
     label: 'Flow Editor', 
     path: '/flow' 
   }
@@ -27,17 +33,19 @@ const MENU_ITEMS = [
 
 export function MainLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
+    <SidebarProvider defaultOpen={false}>
     <div className="flex h-screen w-full overflow-hidden">
       {/* Главный сайдбар */}
       <Sidebar collapsible="icon" className="border-r">
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
+              <SidebarMenuButton asChild className="md:h-8 md:p-0">
                 <Link to="/">
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <div className="flex items-center justify-center">
                     <Command className="size-4" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
@@ -50,18 +58,16 @@ export function MainLayout() {
           </SidebarMenu>
         </SidebarHeader>
 
-        <SidebarContent>
+        <SidebarContent className="flex flex-col gap-2 p-2">
           <SidebarMenu>
             {MENU_ITEMS.map((item) => (
               <SidebarMenuItem key={item.path}>
                 <SidebarMenuButton
-                  asChild
+                  onClick={() => navigate(item.path)}
                   isActive={location.pathname === item.path}
                 >
-                  <Link to={item.path}>
-                    <item.icon className="size-4" />
-                    <span>{item.label}</span>
-                  </Link>
+                  <item.icon className="size-4" />
+                  <span>{item.label}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -86,5 +92,6 @@ export function MainLayout() {
         <Outlet />
       </main>
     </div>
+    </SidebarProvider>
   );
 } 
