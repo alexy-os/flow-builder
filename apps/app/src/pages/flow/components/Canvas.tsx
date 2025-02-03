@@ -1,12 +1,12 @@
 import { memo } from "react";
 import { Button } from "@packages/ui/components/ui/button";
-import { Plus, PanelLeftClose, PanelLeft } from "lucide-react";
+import { Plus, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { SortableList } from "@packages/dnd";
 import type { List } from "@packages/dnd";
 import { ListItem } from "./ListItem";
 import { cn } from "@packages/ui/lib/utils";
 import { useDroppable } from '@dnd-kit/core';
-import { useSidebar, SidebarTrigger } from "@packages/ui/components/ui/sidebar";
+import { useSidebar } from "@packages/ui/components/ui/sidebar";
 import { ModeToggle } from "@apps/app/src/components/ui/mode-toggle";
 
 export const CanvasHeader = memo(function CanvasHeader({
@@ -23,19 +23,25 @@ export const CanvasHeader = memo(function CanvasHeader({
       "w-full",
       "max-w-full"
     )}>
-      <SidebarTrigger onClick={toggleSidebar}>
-        <Button variant="outline" size="sm">
-          {state === "expanded" ? (
-            <PanelLeftClose className="w-4 h-4 mr-2" />
-          ) : (
-            <PanelLeft className="w-4 h-4 mr-2" />
-          )}
-        </Button>
-      </SidebarTrigger>
+      <Button
+        key="main-sidebar-trigger"
+        data-sidebar="trigger"
+        variant="ghost"
+        size="icon"
+        className="h-7 w-7"
+        onClick={toggleSidebar}
+      >
+      {state === "expanded" ? (
+        <PanelLeftClose />
+      ) : (
+        <PanelLeftOpen />
+      )}
+      <span className="sr-only">Toggle Sidebar</span>
+    </Button>
       <div className="text-base font-medium text-foreground flex-shrink-0">Canvas</div>
       <div className="flex gap-2 ml-auto flex-shrink-0 flex-nowrap">
-        <Button onClick={onAddList} variant="default" size="sm" className="whitespace-nowrap bg-primary text-primary-foreground">
-          <Plus className="w-4 h-4 mr-2" />
+        <Button onClick={onAddList} variant="default" size="sm" className="h-7 whitespace-nowrap bg-primary text-slate-100">
+          <Plus className="mr-2" />
           Add List
         </Button>
         <ModeToggle />

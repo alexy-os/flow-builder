@@ -3,8 +3,7 @@ import { DraggableItem } from "@packages/dnd";
 import type { DraggableComponent } from "@packages/dnd";
 import { 
   SidebarMenu, 
-  SidebarMenuItem, 
-  SidebarTrigger 
+  SidebarMenuItem
 } from "@packages/ui/components/ui/sidebar";
 
 const SIDEBAR_COMPONENTS: DraggableComponent[] = [

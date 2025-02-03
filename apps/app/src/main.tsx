@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css';
-import "@packages/ui/styles/index.css";
+import './styles/app.css';
+//import "@packages/ui/styles/index.css";
 
 // Strict mode is disabled in production
 ReactDOM.createRoot(document.getElementById('root')!).render(

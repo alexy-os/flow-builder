@@ -26,7 +26,7 @@ export default function FlowPage() {
   }, [setLists]);
 
   return (
-    <SidebarProvider key="flow-sidebar" defaultOpen={true}>
+    <SidebarProvider key="main-sidebar-trigger" defaultOpen={true}>
       <div className="flex flex-col h-screen w-full overflow-hidden relative">
         <CanvasHeader 
           onAddList={handleAddList}
