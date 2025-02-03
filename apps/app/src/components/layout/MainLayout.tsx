@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { Command, LayoutGrid, Settings, LucideFlower, LucideHome } from 'lucide-react';
+import { PanelLeftClose, PanelLeftOpen, Moon, Sun, Command, LayoutGrid, Settings, LucideFlower, LucideHome } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -8,12 +8,16 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
   SidebarProvider,
   useSidebar
 } from '@packages/ui/components/ui/sidebar';
-import { Button } from '@packages/ui/components/ui/button';
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@packages/ui/components/ui/dropdown-menu"
+import { useTheme } from "@apps/app/src/components/ui/theme-provider"
 
 const MENU_ITEMS = [
   { 
@@ -47,6 +51,7 @@ export function MainLayout() {
 // Create a separate component to use the useSidebar hook
 function MainLayoutContent({ location, navigate }: { location: any, navigate: any }) {
   const { state, toggleSidebar } = useSidebar();
+  const { setTheme } = useTheme();
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
@@ -100,6 +105,28 @@ function MainLayoutContent({ location, navigate }: { location: any, navigate: an
                 )}
                 <span className="sr-only">Toggle Sidebar</span>
               </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                    <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    <span className="sr-only">Toggle theme</span>
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onClick={() => setTheme("light")}>
+                    Light
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("dark")}>
+                    Dark
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("system")}>
+                    System
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton>

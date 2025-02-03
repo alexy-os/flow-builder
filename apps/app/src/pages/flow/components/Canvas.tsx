@@ -7,7 +7,6 @@ import { ListItem } from "./ListItem";
 import { cn } from "@packages/ui/lib/utils";
 import { useDroppable } from '@dnd-kit/core';
 import { useSidebar } from "@packages/ui/components/ui/sidebar";
-import { ModeToggle } from "@apps/app/src/components/ui/mode-toggle";
 
 export const CanvasHeader = memo(function CanvasHeader({
   onAddList
@@ -44,7 +43,6 @@ export const CanvasHeader = memo(function CanvasHeader({
           <Plus className="mr-2" />
           Add List
         </Button>
-        <ModeToggle />
       </div>
     </div>
   );
