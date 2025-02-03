@@ -39,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "/flow",
         element: <FlowPage />
+      },
+      {
+        path: "*",
+        element: <FlowPage />
       }
     ]
   }
