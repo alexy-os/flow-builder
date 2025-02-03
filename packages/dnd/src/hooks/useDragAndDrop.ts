@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import type { DragStartEvent, DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { moveItemBetweenLists, addItemToList } from "../utils/lists";
-import type { UseDragAndDropProps, UseDragAndDrop } from "../types/dnd";
+import { moveItemBetweenLists, addItemToList } from "@packages/dnd";
+import type { UseDragAndDropProps, UseDragAndDrop } from "@packages/dnd";
 
 export const useDragAndDrop = ({
   lists,

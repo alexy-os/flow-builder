@@ -4,7 +4,6 @@ import { ThemeProvider } from './components/ui/theme-provider';
 import { MainLayout } from './components/layout/MainLayout';
 import { CleanLayout } from './components/layout/CleanLayout';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
-import { LayoutProvider } from './contexts/LayoutContext';
 import FlowPage from './pages/flow';
 
 const HomePage = lazy(() => import('./pages/home').then(module => ({ default: module.HomePage })));
@@ -50,11 +49,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <LayoutProvider>
-      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        <RouterProvider router={router} />
-      </ThemeProvider>
-    </LayoutProvider>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <RouterProvider router={router} />
+    </ThemeProvider>
   );
 }
 

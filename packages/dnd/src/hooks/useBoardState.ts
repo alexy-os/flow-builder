@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
-import type { List, CanvasItem } from "@packages/dnd";
-import type { UseBoardState } from "../types/dnd";
+import type { List, CanvasItem, UseBoardState } from "@packages/dnd";
 
 export const useBoardState = (): UseBoardState => {
   const [lists, setLists] = useState<List[]>([]);

@@ -1,4 +1,4 @@
 {
   "extends": "@packages/typescript-config/vite.json",
-  "include": ["src"]
+  "include": ["src", "../../packages/dnd/src/hooks/useBoardState.ts", "../../packages/dnd/src/hooks/useDragAndDrop.ts"]
 } 

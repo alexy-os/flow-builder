@@ -1,3 +1,23 @@
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+
+export interface UseBoardState {
+  lists: List[];
+  activeItem: CanvasItem | null;
+  setLists: (value: List[] | ((prev: List[]) => List[])) => void;
+  setActiveItem: (item: CanvasItem | null) => void;
+}
+
+export interface UseDragAndDropProps {
+  lists: List[];
+  setLists: (value: List[] | ((prev: List[]) => List[])) => void;
+  setActiveItem: (item: CanvasItem | null) => void;
+}
+
+export interface UseDragAndDrop {
+  handleDragStart: (event: DragStartEvent) => void;
+  handleDragEnd: (event: DragEndEvent) => void;
+} 
+
 export interface DraggableComponent {
   id: string;
   label: string;

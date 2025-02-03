@@ -4,9 +4,9 @@ import { DndContainer, type List } from "@packages/dnd";
 import { SidebarPage } from "./components/Sidebar";
 import { Canvas, CanvasHeader } from "./components/Canvas";
 import { DragOverlayContent } from "./components/DragOverlayContent";
-import { useBoardState } from "./hooks/useBoardState";
-import { useDragAndDrop } from "./hooks/useDragAndDrop";
-import { createNewList } from "./utils/list-utils";
+import { useBoardState } from "@packages/dnd";
+import { useDragAndDrop } from "@packages/dnd";
+import { createNewList } from "@packages/dnd";
 import { cn } from "@packages/ui/lib/utils";
 import { 
   SidebarProvider, 
