@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ThemeProvider } from './components/ui/theme-provider';
 import { MainLayout } from './components/layout/MainLayout';
 import { CleanLayout } from './components/layout/CleanLayout';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
@@ -46,7 +47,9 @@ const router = createBrowserRouter([
 function App() {
   return (
       <LayoutProvider>
-        <RouterProvider router={router} />
+        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </LayoutProvider>
   );
 }
