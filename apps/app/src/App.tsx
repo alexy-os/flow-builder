@@ -9,9 +9,25 @@ import FlowPage from './pages/flow';
 
 const HomePage = lazy(() => import('./pages/home').then(module => ({ default: module.HomePage })));
 const WelcomePage = lazy(() => import('./pages/welcome').then(module => ({ default: module.WelcomePage })));
-// bug const FlowPage = lazy(() => import('./pages/flow').then(module => ({ default: module.FlowPage })));
 
 const router = createBrowserRouter([
+  {
+    element: <MainLayout />,
+    children: [
+      {
+        path: "/flow",
+        element: <FlowPage />
+      },
+      {
+        path: "/welcome",
+        element: (
+          <Suspense fallback={<LoadingSpinner fullScreen />}>
+            <WelcomePage />
+          </Suspense>
+        )
+      }
+    ]
+  },
   {
     path: "/",
     element: <CleanLayout />,
@@ -25,38 +41,16 @@ const router = createBrowserRouter([
         )
       }
     ]
-  },
-  {
-    path: "/",
-    element: <MainLayout />,
-    children: [
-      {
-        path: "welcome",
-        element: (
-          <Suspense fallback={<LoadingSpinner fullScreen />}>
-            <WelcomePage />
-          </Suspense>
-        )
-      },
-      {
-        path: "flow",
-        element: <FlowPage />
-      },
-      {
-        path: "*",
-        element: <FlowPage />
-      }
-    ]
   }
 ]);
 
 function App() {
   return (
-      <LayoutProvider>
-        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-          <RouterProvider router={router} />
-        </ThemeProvider>
-      </LayoutProvider>
+    <LayoutProvider>
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </LayoutProvider>
   );
 }
 
