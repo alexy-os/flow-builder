@@ -41,6 +41,20 @@ const router = createBrowserRouter([
         )
       }
     ]
+  },
+  {
+    path: "*",
+    element: <CleanLayout />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<LoadingSpinner fullScreen />}>
+            <HomePage />
+          </Suspense>
+        )
+      }
+    ]
   }
 ]);
 
