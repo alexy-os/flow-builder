@@ -1,8 +1,9 @@
 import { useCallback } from "react";
 import { horizontalListSortingStrategy } from "@dnd-kit/sortable";
 import { DndContainer, type List } from "@packages/dnd";
-import { SidebarPage } from "./components/Sidebar";
-import { Canvas, CanvasHeader } from "./components/Canvas";
+import { SidebarPage } from "@apps/app/src/components/partials/Sidebar";
+import { CanvasHeader } from "@apps/app/src/components/partials/CanvasHeader";
+import { Canvas } from "./components/Canvas";
 import { DragOverlayContent } from "./components/DragOverlayContent";
 import { useBoardState } from "@packages/dnd";
 import { useDragAndDrop } from "@packages/dnd";
