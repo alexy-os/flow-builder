@@ -12,7 +12,7 @@ const SIDEBAR_COMPONENTS: DraggableComponent[] = [
   { id: 'card', label: 'Card', color: 'bg-purple-500' },
 ];
 
-export function SidebarPage() {
+export const SidebarPage = memo(() => {
   return (
     <>
       <SidebarMenu>
@@ -23,7 +23,7 @@ export function SidebarPage() {
                 key={component.id}
                 component={component}
                 prefix="sidebar-"
-                className={`${component.color} w-full p-4 rounded-lg cursor-move active:cursor-grabbing text-white text-center shadow-sm hover:shadow-md transition-shadow`}
+                className={`${component.color} w-full min-w-40 p-4 rounded-lg cursor-move active:cursor-grabbing text-white text-center shadow-sm hover:shadow-md transition-shadow`}
               />
             </SidebarMenuItem>
           ))}
@@ -31,4 +31,4 @@ export function SidebarPage() {
       </SidebarMenu>
     </>
   );
-}
+});
