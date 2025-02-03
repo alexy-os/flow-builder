@@ -13,10 +13,11 @@ const WelcomePage = lazy(() => import('./pages/welcome').then(module => ({ defau
 
 const router = createBrowserRouter([
   {
+    path: "/",
     element: <CleanLayout />,
     children: [
       {
-        path: "/",
+        index: true,
         element: (
           <Suspense fallback={<LoadingSpinner fullScreen />}>
             <HomePage />
@@ -26,10 +27,11 @@ const router = createBrowserRouter([
     ]
   },
   {
+    path: "/",
     element: <MainLayout />,
     children: [
       {
-        path: "/welcome",
+        path: "welcome",
         element: (
           <Suspense fallback={<LoadingSpinner fullScreen />}>
             <WelcomePage />
@@ -37,7 +39,7 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: "/flow",
+        path: "flow",
         element: <FlowPage />
       },
       {
