@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './components/ui/theme-provider';
 import { MainLayout } from './components/layout/MainLayout';
 import { CleanLayout } from './components/layout/CleanLayout';
@@ -44,17 +44,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <CleanLayout />,
-    children: [
-      {
-        index: true,
-        element: (
-          <Suspense fallback={<LoadingSpinner fullScreen />}>
-            <HomePage />
-          </Suspense>
-        )
-      }
-    ]
+    element: <Navigate to="/" replace />
   }
 ]);
 
