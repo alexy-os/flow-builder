@@ -5,6 +5,8 @@ import { MainLayout } from './components/layout/MainLayout';
 import { CleanLayout } from './components/layout/CleanLayout';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import FlowPage from './pages/flow';
+import BuildyPage from './pages/buildy';
+
 
 const HomePage = lazy(() => import('./pages/home').then(module => ({ default: module.HomePage })));
 const WelcomePage = lazy(() => import('./pages/welcome').then(module => ({ default: module.WelcomePage })));
@@ -16,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "/flow",
         element: <FlowPage />
+      },
+      {
+        path: "/buildy",
+        element: <BuildyPage />
       },
       {
         path: "/welcome",

@@ -5,9 +5,9 @@ import { Button } from "@packages/ui/components/ui/button";
 import { cn } from "@packages/ui/lib/utils";
 
 export const CanvasHeader = memo(function CanvasHeader({
-    onAddList
+    onAddList,
   }: { 
-    onAddList: () => void;
+    onAddList?: () => void;
   }) {
     const { state, toggleSidebar } = useSidebar();
   
@@ -26,20 +26,27 @@ export const CanvasHeader = memo(function CanvasHeader({
           className="h-7 w-7"
           onClick={toggleSidebar}
         >
-        {state === "expanded" ? (
-          <PanelLeftClose />
-        ) : (
-          <PanelLeftOpen />
-        )}
-        <span className="sr-only">Toggle Sidebar</span>
-      </Button>
+          {state === "expanded" ? (
+            <PanelLeftClose />
+          ) : (
+            <PanelLeftOpen />
+          )}
+          <span className="sr-only">Toggle Sidebar</span>
+        </Button>
         <div className="text-base font-medium text-foreground flex-shrink-0">Canvas</div>
-        <div className="flex gap-2 ml-auto flex-shrink-0 flex-nowrap">
-          <Button onClick={onAddList} variant="default" size="sm" className="h-7 whitespace-nowrap bg-primary text-slate-100">
-            <Plus className="mr-2" />
-            Add List
-          </Button>
-        </div>
+        {onAddList && (
+          <div className="flex gap-2 ml-auto flex-shrink-0 flex-nowrap">
+            <Button 
+              onClick={onAddList} 
+              variant="default" 
+              size="sm" 
+              className="h-7 whitespace-nowrap bg-primary text-slate-100"
+            >
+              <Plus className="mr-2" />
+              Add List
+            </Button>
+          </div>
+        )}
       </div>
     );
   });

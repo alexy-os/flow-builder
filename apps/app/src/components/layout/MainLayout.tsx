@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { PanelLeftClose, PanelLeftOpen, Moon, Sun, Command, LayoutGrid, Settings, LucideFlower, LucideHome } from 'lucide-react';
+import { PanelLeftClose, PanelLeftOpen, Moon, Sun, Command, LayoutGrid, Settings, Leaf, LucideFlower, LucideHome } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -34,6 +34,11 @@ const MENU_ITEMS = [
     icon: LucideFlower, 
     label: 'Flow Editor', 
     path: '/flow' 
+  },
+  { 
+    icon: Leaf, 
+    label: 'Buildy', 
+    path: '/buildy' 
   }
 ];
 
