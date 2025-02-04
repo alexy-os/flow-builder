@@ -5,18 +5,22 @@ import {
   SidebarMenuItem
 } from "@packages/ui/components/ui/sidebar";
 
-const SIDEBAR_COMPONENTS: DraggableComponent[] = [
+const DEFAULT_SIDEBAR_COMPONENTS: DraggableComponent[] = [
   { id: 'button', label: 'Button', color: 'bg-blue-500' },
   { id: 'input', label: 'Input', color: 'bg-green-500' },
   { id: 'card', label: 'Card', color: 'bg-purple-500' },
 ];
 
-export const SidebarPage = memo(() => {
+export const SidebarPage = memo(({ 
+  items = DEFAULT_SIDEBAR_COMPONENTS 
+}: { 
+  items?: DraggableComponent[] 
+}) => {
   return (
     <>
       <SidebarMenu>
         <div className="p-4 space-y-4">
-          {SIDEBAR_COMPONENTS.map(component => (
+          {items.map(component => (
             <SidebarMenuItem key={component.id}>
               <DraggableItem
                 key={component.id}

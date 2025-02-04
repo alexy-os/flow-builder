@@ -3,6 +3,7 @@ import { SortableList, type List } from "@packages/dnd";
 import { useSidebar } from "@packages/ui/components/ui/sidebar";
 import { cn } from "@packages/ui/lib/utils";
 import { ListItem } from "./ListItem";
+import { useDndContext } from "@dnd-kit/core";
 
 export const Canvas = memo(function Canvas({ 
   lists
@@ -13,6 +14,8 @@ export const Canvas = memo(function Canvas({
   }>;
 }) {
   const { state } = useSidebar();
+  const { active } = useDndContext();
+  const isDragging = Boolean(active);
 
   if (!lists || lists.length === 0) {
     return (
@@ -40,12 +43,16 @@ export const Canvas = memo(function Canvas({
                   list={list}
                   className={cn(
                     state === "expanded" ? "w-[calc(100vw-380px)]" : "w-[calc(100vw-80px)]",
-                    "border border-gray-200 dark:bg-gray-800 rounded"
+                    "border dark:border-secondary border-secondary-foreground"
                   )}
-                  headerClassName="p-4 border-b border-gray-200 dark:border-gray-700"
-                  contentClassName="p-4 space-y-3"
-                  itemClassName="mb-2"
-                  renderHeader={() => <div className="h-20 rounded border-2 border-dashed border-gray-200 dark:border-gray-700 mt-3 flex items-center justify-center text-gray-500 dark:text-gray-400">Drop components here</div>}
+                  headerClassName="p-4 border-b dark:border-secondary border-secondary-foreground"
+                  //contentClassName=""
+                  //itemClassName=""
+                  renderHeader={() => isDragging ? (
+                    <div className="h-8 text-sm rounded border border-dashed border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                      Drop components here
+                    </div>
+                  ) : <h2 className="text-sm text-secondary-foreground/50">Example Page</h2>}
                   renderItem={(item) => (
                     <ListItem key={item.id} item={item} listId={list.id} />
                   )}

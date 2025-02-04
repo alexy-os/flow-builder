@@ -12,6 +12,16 @@ import {
   useSidebar 
 } from "@packages/ui/components/ui/sidebar";
 import { cn } from "@packages/ui/lib/utils";
+import { DraggableComponent } from "@packages/dnd";
+
+const SIDEBAR_ITEMS: DraggableComponent[] = [
+  { id: 'hero', label: 'Hero Section', color: 'bg-blue-500' },
+  { id: 'features', label: 'Features', color: 'bg-green-500' },
+  { id: 'pricing', label: 'Pricing', color: 'bg-purple-500' },
+  { id: 'testimonials', label: 'Testimonials', color: 'bg-orange-500' },
+  { id: 'cta', label: 'Call to Action', color: 'bg-red-500' },
+  { id: 'footer', label: 'Footer', color: 'bg-gray-500' },
+];
 
 export default function BuildyPage() {
   const { lists, activeItem, setLists, setActiveItem } = useBoardState();
@@ -69,7 +79,7 @@ function BuildySidebar() {
         "w-[300px] h-full transition-all duration-200",
         state === "expanded" ? "translate-x-0" : "-translate-x-full"
       )}>
-        <SidebarPage />
+        <SidebarPage items={SIDEBAR_ITEMS} />
       </div>
     </aside>
   );

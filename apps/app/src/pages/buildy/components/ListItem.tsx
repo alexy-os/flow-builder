@@ -14,9 +14,9 @@ export const ListItem = memo(function ListItem({
         key={item.id}
         item={item}
         listId={listId}
-        className={`${item.color}  p-4 rounded text-white text-center relative`}
+        className={`${item.color}  p-4 text-white text-center relative`}
       >
-        <div className="w-64 cursor-grab active:cursor-grabbing">
+        <div className="w-full cursor-grab active:cursor-grabbing">
           {item.label}
         </div>
       </SortableItem>
