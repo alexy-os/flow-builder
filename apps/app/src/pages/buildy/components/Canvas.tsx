@@ -45,6 +45,7 @@ export const Canvas = memo(function Canvas({
                   headerClassName="p-4 border-b border-gray-200 dark:border-gray-700"
                   contentClassName="p-4 space-y-3"
                   itemClassName="mb-2"
+                  renderHeader={() => <div className="h-20 rounded border-2 border-dashed border-gray-200 dark:border-gray-700 mt-3 flex items-center justify-center text-gray-500 dark:text-gray-400">Drop components here</div>}
                   renderItem={(item) => (
                     <ListItem key={item.id} item={item} listId={list.id} />
                   )}

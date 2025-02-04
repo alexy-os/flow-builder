@@ -5,8 +5,7 @@ import {
   DndContainer,
   useBoardState,
   useDragAndDrop,
-  createNewList,
-  type List
+  createNewList
 } from "@packages/dnd";
 import { 
   SidebarProvider, 
