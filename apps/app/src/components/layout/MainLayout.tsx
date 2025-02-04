@@ -17,7 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@packages/ui/components/ui/dropdown-menu"
-import { useTheme } from "@apps/app/src/components/ui/theme-provider"
+import { useTheme } from "../../components/ui/theme-provider"
 
 const MENU_ITEMS = [
   { 

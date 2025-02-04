@@ -1,10 +1,9 @@
 import { memo } from "react";
-import { SortableList } from "@packages/dnd";
-import type { List } from "@packages/dnd";
+import { SortableList, type List } from "@packages/dnd";
+import { CanvasHeader } from "@apps/app/partials";
 import { ListItem } from "./ListItem";
-import { cn } from "@packages/ui/lib/utils";
 import { useSidebar } from "@packages/ui/components/ui/sidebar";
-import { CanvasHeader } from "@apps/app/src/components/partials/CanvasHeader";
+import { cn } from "@packages/ui/lib/utils";
 
 
 export const Canvas = memo(function Canvas({ 

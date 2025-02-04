@@ -1,6 +1,5 @@
 import { memo } from "react";
-import { DraggableItem } from "@packages/dnd";
-import type { DraggableComponent } from "@packages/dnd";
+import { DraggableItem, type DraggableComponent } from "@packages/dnd";
 import { 
   SidebarMenu, 
   SidebarMenuItem

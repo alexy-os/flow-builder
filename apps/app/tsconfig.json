@@ -1,4 +1,12 @@
 {
-  "extends": "@packages/typescript-config/vite.json",
-  "include": ["src", "../../packages/dnd/src/hooks/useBoardState.ts", "../../packages/dnd/src/hooks/useDragAndDrop.ts"]
+  "extends": "../../packages/typescript-config/vite.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@apps/app/*": ["src/*"],
+      "@packages/*": ["../../packages/*/src"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 } 

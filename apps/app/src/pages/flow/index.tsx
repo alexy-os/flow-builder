@@ -1,18 +1,18 @@
 import { useCallback } from "react";
-import { horizontalListSortingStrategy } from "@dnd-kit/sortable";
-import { DndContainer, type List } from "@packages/dnd";
-import { SidebarPage } from "@apps/app/src/components/partials/Sidebar";
-import { CanvasHeader } from "@apps/app/src/components/partials/CanvasHeader";
-import { Canvas } from "./components/Canvas";
-import { DragOverlayContent } from "./components/DragOverlayContent";
-import { useBoardState } from "@packages/dnd";
-import { useDragAndDrop } from "@packages/dnd";
-import { createNewList } from "@packages/dnd";
-import { cn } from "@packages/ui/lib/utils";
+import { SidebarPage, CanvasHeader } from "@apps/app/partials";
+import { Canvas, DragOverlayContent } from "./components";
+import {
+  DndContainer,
+  useBoardState,
+  useDragAndDrop,
+  createNewList,
+  type List
+} from "@packages/dnd";
 import { 
   SidebarProvider, 
   useSidebar 
 } from "@packages/ui/components/ui/sidebar";
+import { cn } from "@packages/ui/lib/utils";
 
 export default function FlowPage() {
   const { lists, activeItem, setLists, setActiveItem } = useBoardState();
@@ -38,7 +38,6 @@ export default function FlowPage() {
             lists={lists}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
-            strategy={horizontalListSortingStrategy}
             overlayContent={activeItem ? <DragOverlayContent item={activeItem} /> : null}
           >
             <div className="flex w-full overflow-hidden relative">

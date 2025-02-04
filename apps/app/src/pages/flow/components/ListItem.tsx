@@ -1,6 +1,5 @@
 import { memo } from "react";
-import { SortableItem } from "@packages/dnd";
-import type { CanvasItem } from "@packages/dnd";
+import { SortableItem, type CanvasItem } from "@packages/dnd";
 
 export const ListItem = memo(function ListItem({ 
   item, 

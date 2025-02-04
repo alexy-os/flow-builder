@@ -1,7 +1,7 @@
 {
   "name": "@apps/app",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React application with Vite and BunJS, using shared UI components for Flow Builder",
   "type": "module",
   "license": "MIT",
@@ -9,6 +9,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
+  },
+  "exports": {
+    "./partials": "./src/components/partials/index.ts"
   },
   "dependencies": {
     "@packages/dnd": "workspace:*",

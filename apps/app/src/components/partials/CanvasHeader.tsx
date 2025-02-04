@@ -1,8 +1,8 @@
 import { memo } from "react";
-import { Button } from "@packages/ui/components/ui/button";
 import { Plus, PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { cn } from "@packages/ui/lib/utils";
 import { useSidebar } from "@packages/ui/components/ui/sidebar";
+import { Button } from "@packages/ui/components/ui/button";
+import { cn } from "@packages/ui/lib/utils";
 
 export const CanvasHeader = memo(function CanvasHeader({
     onAddList

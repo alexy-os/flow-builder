@@ -1,11 +1,12 @@
 {
-  "extends": "@packages/typescript-config/vite.json",
+  "extends": "../typescript-config/base.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@packages/ui/*": ["src/*"]
     }
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "allowImportingTsExtensions": true,
+  "noEmit": true,
+  "include": ["src"]
 } 
